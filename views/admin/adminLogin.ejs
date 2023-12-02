@@ -1,0 +1,187 @@
+<%- include("../partials/header") %>
+<style>
+  .background-radial-gradient {
+    background-color: hsl(218, 41%, 15%);
+    background-image: radial-gradient(650px circle at 0% 0%,
+        hsl(218, 41%, 35%) 15%,
+        hsl(218, 41%, 30%) 35%,
+        hsl(218, 41%, 20%) 75%,
+        hsl(218, 41%, 19%) 80%,
+        transparent 100%),
+      radial-gradient(1250px circle at 100% 100%,
+        hsl(218, 41%, 45%) 15%,
+        hsl(218, 41%, 30%) 35%,
+        hsl(218, 41%, 20%) 75%,
+        hsl(218, 41%, 19%) 80%,
+        transparent 100%);
+  }
+
+  #radius-shape-1 {
+    height: 220px;
+    width: 220px;
+    top: -60px;
+    left: -130px;
+    background: radial-gradient(#44006b, #ad1fff);
+    overflow: hidden;
+  }
+
+  #radius-shape-2 {
+    border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+    bottom: -60px;
+    right: -110px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(#44006b, #ad1fff);
+    overflow: hidden;
+  }
+
+  .bg-glass {
+    background-color: hsla(0, 0%, 100%, 0.9) !important;
+    backdrop-filter: saturate(200%) blur(25px);
+  }
+</style>
+
+<section class="background-radial-gradient overflow-hidden ">
+
+  <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
+    <div class="row gx-lg-5 align-items-center mb-5">
+      <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
+        <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
+         Login and <br />
+          <span style="color: hsl(218, 81%, 75%)"> Control Users</span>
+        </h1>
+     
+      </div>
+
+      <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
+        <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
+        <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
+
+        <div class="card bg-glass">
+          <div class="card-body px-4 py-5 px-md-5">
+          <div class="text-center ">
+            
+            <h2 class="fw-bold mb-2 text-uppercase">Admin Login</h2>
+            
+            <% if (errorMessage && errorMessage.length > 0) { %>
+              <p style="color: red;"><%= errorMessage %></p>
+            <% }else{ %>
+              <p >Please Login</p>
+            <% } %>
+
+          </div>
+            <form action="/admin/Submit" method="post" class="pb-5">
+           
+           
+
+              <!-- Email input -->
+              <div class="form-outline mb-4">
+                <input type="email" id="form3Example3" class="form-control" name="email" />
+                <label class="form-label" for="form3Example3">Email address</label>
+              </div>
+
+              <!-- Password input -->
+              <div class="form-outline mb-4">
+                <input type="password" id="form3Example4" class="form-control" name="password" />
+                <label class="form-label" for="form3Example4">Password</label>
+                <div id="show" style="height: 20px;" class="text-danger"></div>
+              </div>
+             
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordVisibility()">
+                <label class="form-check-label" for="showPasswordCheckbox">Show Password</label>
+              </div>
+              <!-- Checkbox -->
+              
+
+              <!-- Submit button -->
+              <button type="submit" class="btn btn-primary btn-block pe-3 ps-3 mb-4">
+                Login
+              </button>
+             
+
+              <!-- Register buttons -->
+              
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var form = document.querySelector("form");
+
+    form.addEventListener("submit", function(event) {
+      var emailInput = document.getElementById("form3Example3");
+      var passwordInput = document.getElementById("form3Example4");
+      let  display=document.getElementById('show')
+      // Reset previous error styles
+      resetValidationStyles();
+
+
+      
+
+      // Validate email
+      if (emailInput.value.trim() === "") {
+        event.preventDefault();
+        displayError(emailInput);
+      } else if (!isValidEmail(emailInput.value.trim())) {
+        event.preventDefault();
+        displayError(emailInput);
+      }
+
+      // Validate password
+      if (passwordInput.value.trim() === "") {
+        event.preventDefault();
+        displayError(passwordInput);
+      } else if (passwordInput.value.trim().length < 6) {
+        event.preventDefault();
+        displayError(display.innerHTML="Password must be at least 6 characters long.");
+      }
+    });
+
+    function displayError(input, message) {
+      input.classList.add("is-invalid");
+      if (message) {
+        var errorMessage = document.createElement("p");
+        errorMessage.className = "text-danger error-message";
+        errorMessage.textContent = message;
+        input.parentNode.appendChild(errorMessage);
+      }
+    }
+
+    function resetValidationStyles() {
+      document.querySelectorAll(".is-invalid").forEach(function(element) {
+        element.classList.remove("is-invalid");
+      });
+      document.querySelectorAll(".error-message").forEach(function(element) {
+        element.remove();
+      });
+    }
+
+    function isValidEmail(email) {
+      // You can use a more sophisticated email validation regex here
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+  });
+
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('form3Example4');
+    const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+
+    if (showPasswordCheckbox.checked) {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
+  }
+</script>
+
+
+
+  <%- include("../partials/footer") %>
